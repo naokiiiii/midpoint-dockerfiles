@@ -1,0 +1,98 @@
+version: '3.3'
+
+#
+# midPoint冗長構成サンプル
+#
+
+# ボリュームの定義
+volumes:
+  postgresql4mp_data:
+    driver: local
+  mp_home:
+    driver: local
+
+# シークレットの定義
+secrets:
+  mp_database_password.txt:
+    file: ./configs-and-secrets/database_password.txt
+  mp_keystore_password.txt:
+    file: ./configs-and-secrets/keystore_password.txt
+
+# サービスの定義
+services:
+
+  # ロードバランサコンテナ
+  lb:
+    container_name: mp-ha-example-lb
+    build:
+      context: ./nginx
+      args:
+        http_proxy: ${http_proxy}
+        https_proxy: ${https_proxy}
+        no_proxy: ${no_proxy}
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      default:
+        aliases:
+          - iga.example.com
+
+  # midPoint用DBMSコンテナ
+  db4mp:
+    container_name: mp-ha-example-db4mp
+    build:
+      context: ./postgresql4mp
+      args:
+        http_proxy:  ${http_proxy}
+        https_proxy: ${https_proxy}
+        no_proxy:    ${no_proxy}
+    ports:
+      - 5432:5432
+    volumes:
+      - postgresql4mp_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: midpoint
+      POSTGRES_PASSWORD_FILE: /run/secrets/mp_database_password.txt
+      POSTGRES_INITDB_ARGS:   --lc-collate=en_US.utf8 --lc-ctype=en_US.utf8
+      POSTGRES_DB: midpointdb
+    networks:
+      - default
+    secrets:
+     - mp_database_password.txt
+
+  # IGAコンテナ
+  iga:
+    build:
+      context: ./midpoint
+      args:
+        http_proxy:  ${http_proxy}
+        https_proxy: ${https_proxy}
+        no_proxy:    ${no_proxy}
+    depends_on:
+      - db4mp
+    environment:
+     - REPO_DATABASE_TYPE=postgresql
+     - REPO_JDBC_URL=jdbc:postgresql://db4mp:5432/midpointdb?characterEncoding=utf8&useSSL=false
+     - REPO_PORT=default
+     - REPO_HOST=db4mp
+     - REPO_DATABASE=midpointdb
+     - REPO_USER=midpoint
+     - REPO_PASSWORD_FILE=/run/secrets/mp_database_password.txt
+     - REPO_MISSING_SCHEMA_ACTION=create
+     - REPO_UPGRADEABLE_SCHEMA_ACTION=stop
+     - REPO_SCHEMA_VERSION_IF_MISSING
+     - REPO_SCHEMA_VARIANT
+     - MP_KEYSTORE_PASSWORD_FILE=/run/secrets/mp_keystore_password.txt
+     - MP_MEM_MAX=2048m
+     - MP_MEM_INIT=1024m
+     - MP_SCALE_MODE=on
+     - TIMEZONE=UTC
+#     - MP_JAVA_OPTS=-Dmidpoint.nodeId=NodeA -Dmidpoint.nodeIdSource=NodeA -Dmidpoint.taskManager.clustered=true
+    networks:
+     - default
+    secrets:
+     - mp_database_password.txt
+     - mp_keystore_password.txt
+    volumes:
+     - mp_home:/opt/midpoint/var
