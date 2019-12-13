@@ -61,9 +61,8 @@ services:
     secrets:
      - mp_database_password.txt
 
-  # IGAコンテナ(NodeA)
-  iga1:
-    container_name: ha-example-iga1
+  # IGAコンテナ
+  iga:
     build:
       context: ./midpoint
       args:
@@ -72,8 +71,6 @@ services:
         no_proxy:    ${no_proxy}
     depends_on:
       - db4mp
-    ports:
-      - 8080:8080
     environment:
      - REPO_DATABASE_TYPE=postgresql
      - REPO_JDBC_URL=jdbc:postgresql://db4mp:5432/midpointdb?characterEncoding=utf8&useSSL=false
@@ -89,50 +86,12 @@ services:
      - MP_KEYSTORE_PASSWORD_FILE=/run/secrets/mp_keystore_password.txt
      - MP_MEM_MAX=2048m
      - MP_MEM_INIT=1024m
+     - MP_SCALE_MODE=on
      - TIMEZONE=UTC
-     - MP_JAVA_OPTS=-Dmidpoint.nodeId=NodeA -Dmidpoint.nodeIdSource=NodeA -Dmidpoint.taskManager.clustered=true
     networks:
      - default
     secrets:
      - mp_database_password.txt
      - mp_keystore_password.txt
     volumes:
-     - .mp_home:/opt/midpoint/var
-
-  # IGAコンテナ(NodeB)
-  iga2:
-    container_name: ha-example-iga2
-    build:
-      context: ./midpoint
-      args:
-        http_proxy:  ${http_proxy}
-        https_proxy: ${https_proxy}
-        no_proxy:    ${no_proxy}
-    depends_on:
-      - db4mp
-    ports:
-      - 8081:8080
-    environment:
-     - REPO_DATABASE_TYPE=postgresql
-     - REPO_JDBC_URL=jdbc:postgresql://db4mp:5432/midpointdb?characterEncoding=utf8&useSSL=false
-     - REPO_PORT=default
-     - REPO_HOST=db4mp
-     - REPO_DATABASE=midpointdb
-     - REPO_USER=midpoint
-     - REPO_PASSWORD_FILE=/run/secrets/mp_database_password.txt
-     - REPO_MISSING_SCHEMA_ACTION=create
-     - REPO_UPGRADEABLE_SCHEMA_ACTION=stop
-     - REPO_SCHEMA_VERSION_IF_MISSING
-     - REPO_SCHEMA_VARIANT
-     - MP_KEYSTORE_PASSWORD_FILE=/run/secrets/mp_keystore_password.txt
-     - MP_MEM_MAX=2048m
-     - MP_MEM_INIT=1024m
-     - TIMEZONE=UTC
-     - MP_JAVA_OPTS=-Dmidpoint.nodeId=NodeB -Dmidpoint.nodeIdSource=NodeB -Dmidpoint.taskManager.clustered=true
-    networks:
-     - default
-    secrets:
-     - mp_database_password.txt
-     - mp_keystore_password.txt
-    volumes:
-     - .mp_home:/opt/midpoint/var
+     - mp_home:/opt/midpoint/var

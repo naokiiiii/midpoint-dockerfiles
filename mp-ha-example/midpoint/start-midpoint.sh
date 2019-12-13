@@ -23,6 +23,8 @@ then
 	check REPO_PASSWORD_FILE;	
 fi
 
+# (TODO)
+# [midpoint.nodeId]および[midpoint.nodeIdSource]に[container_name]を代入したいが、現状Dockerの仕様上そのような変数は存在しない。一旦、[HOSTNAME]を指定する。
 java -Xmx$MP_MEM_MAX -Xms$MP_MEM_INIT -Dfile.encoding=UTF8 \
        -Dmidpoint.home=$MP_DIR/var \
        -Dmidpoint.repository.database=$REPO_DATABASE_TYPE \
