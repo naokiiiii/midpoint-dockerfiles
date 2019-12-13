@@ -6,7 +6,7 @@ Examples
 
 This is an example of midPoint's high availability architecture.
 
- - [midPoint High Availability](./midpoint-dockerfiles/mp-ha-example/) example
+ - [midPoint High Availability](./mp-ha-example) example
 
 
 License
