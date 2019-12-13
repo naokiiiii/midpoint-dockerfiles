@@ -1,7 +1,9 @@
 upstream iga.example.com {
+    server iga1:8080 max_fails=1;
+    server iga2:8080 max_fails=1;
     server mp-ha-example_iga_1:8080 max_fails=1;
     server mp-ha-example_iga_2:8080 max_fails=1;
-    sticky name=iga_elb_id hash=index domain=.example.com path=/;
+    sticky name=iga_lb_id hash=index domain=.example.com path=/;
     keepalive 100;
 }
 
