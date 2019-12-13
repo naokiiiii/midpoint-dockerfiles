@@ -97,7 +97,7 @@ services:
      - mp_database_password.txt
      - mp_keystore_password.txt
     volumes:
-     - .mp_home:/opt/midpoint/var
+     - mp_home:/opt/midpoint/var
 
   # IGAコンテナ(NodeB)
   iga2:
@@ -135,4 +135,4 @@ services:
      - mp_database_password.txt
      - mp_keystore_password.txt
     volumes:
-     - .mp_home:/opt/midpoint/var
+     - mp_home:/opt/midpoint/var
