@@ -7,7 +7,7 @@
       xmlns:org="http://midpoint.evolveum.com/xml/ns/public/common/org-3"
       xmlns:scext="http://midpoint.evolveum.com/xml/ns/public/model/scripting/extension-3"
       xmlns:s="http://midpoint.evolveum.com/xml/ns/public/model/scripting-3">
-    <oid>task0000-0000-0000-0000-00000initial</oid>
+    <oid>task0000-0000-0000-0000-00000test</oid>
     <name>test-task</name>
     <description>※テスト用※　60秒間のダミータスク処理</description>
     <executionStatus>closed</executionStatus>
@@ -19,12 +19,12 @@
                     <s:name>script</s:name>
                     <c:value xsi:type="c:ScriptExpressionEvaluatorType">
                         <c:code>
-				log.info("==== doing test-task ==== Start")
-				for (i in 1..60) {
-					sleep(1000)
-					log.info("==== doing test-task ===={}", (1..i).collect{it%10==0?'+':'.'}.join() )
-					}
-				log.info("==== doing test-task ==== End")
+                            log.info("==== doing test-task ==== Start")
+                            for (i in 1..30) {
+                                sleep(1000)
+                                log.info("==== doing test-task ===={}", (1..i).collect{it%10==0?'+':'.'}.join() )
+                            }
+                            log.info("==== doing test-task ==== End")
                         </c:code>
                     </c:value>
                 </s:parameter>
@@ -38,5 +38,4 @@
     <ownerRef oid="00000000-0000-0000-0000-000000000002" />
     <category>BulkActions</category>
     <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/scripting/handler-3</handlerUri>
-    <recurrence>single</recurrence>
 </task>
