@@ -90,7 +90,7 @@ services:
      - MP_MEM_MAX=2048m
      - MP_MEM_INIT=1024m
      - TIMEZONE=UTC
-     - MP_JAVA_OPTS=-Dmidpoint.nodeId=NodeA -Dmidpoint.nodeIdSource=NodeA -Dmidpoint.taskManager.clustered=true
+     - MP_JAVA_OPTS=-Dmidpoint.taskManager.clustered=true -Dmidpoint.nodeId=NodeA
     networks:
      - default
     secrets:
@@ -128,7 +128,7 @@ services:
      - MP_MEM_MAX=2048m
      - MP_MEM_INIT=1024m
      - TIMEZONE=UTC
-     - MP_JAVA_OPTS=-Dmidpoint.nodeId=NodeB -Dmidpoint.nodeIdSource=NodeB -Dmidpoint.taskManager.clustered=true
+     - MP_JAVA_OPTS=-Dmidpoint.taskManager.clustered=true -Dmidpoint.nodeId=NodeB
     networks:
      - default
     secrets:
