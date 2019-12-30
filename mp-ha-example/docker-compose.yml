@@ -63,7 +63,7 @@ services:
 
   # IGAコンテナ(NodeA)
   iga1:
-    container_name: ha-example-iga1
+    container_name: mp-ha-example-iga1
     build:
       context: ./midpoint
       args:
@@ -101,7 +101,7 @@ services:
 
   # IGAコンテナ(NodeB)
   iga2:
-    container_name: ha-example-iga2
+    container_name: mp-ha-example-iga2
     build:
       context: ./midpoint
       args:
